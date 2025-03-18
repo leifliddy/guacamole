@@ -1,0 +1,20 @@
+RewriteEngine                 on
+RewriteRule                   ^/guacamole$ /guacamole/ [R]
+
+RewriteCond %{HTTPS}          off
+RewriteRule ^/guacamole/(.*)  https://%{HTTP_HOST}/guacamole/$1 [R]
+
+
+<Location /guacamole/>
+    Order allow,deny
+    Allow from all
+    ProxyPass http://localhost:{{ http_port }}/guacamole/ flushpackets=on
+    ProxyPassReverse http://localhost:{{ http_port }}/guacamole/
+</Location>
+
+<Location /guacamole/websocket-tunnel>
+    Order allow,deny
+    Allow from all
+    ProxyPass ws://localhost:{{ http_port }}/guacamole/websocket-tunnel
+    ProxyPassReverse ws://localhost:{{ http_port }}/guacamole/websocket-tunnel
+</Location>

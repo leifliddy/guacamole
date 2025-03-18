@@ -1,0 +1,24 @@
+# Auth provider class
+auth-provider: net.sourceforge.guacamole.net.auth.mysql.MySQLAuthenticationProvider
+
+# MySQL properties
+mysql-hostname: localhost
+mysql-port: {{ mysql_port }}
+mysql-database: guacamole_db
+mysql-username: guacamole_user
+mysql-password: {{ password }}
+mysql-auto-create-accounts: true
+
+# LDAP properties
+ldap-hostname:           localhost
+ldap-port:               {{ ldap_port }}
+ldap-encryption-method:  starttls
+ldap-user-base-dn:       cn=users,cn=accounts,{{ domain }}
+ldap-username-attribute: uid
+ldap-config-base-dn:     cn=groups,cn=accounts,{{ domain }}
+
+# we need to bind a svc account in order for the ldap-user-search-filter to work
+# group membership can't be verified otherwise
+ldap-search-bind-dn:       uid={{ svc_acct }},cn=users,cn=accounts,{{ domain }}
+ldap-search-bind-password: {{ svc_acct_pass }}
+ldap-user-search-filter:  (&(objectClass=inetorgperson)(memberOf=cn=guacamole,cn=groups,cn=accounts,{{ domain }}))
